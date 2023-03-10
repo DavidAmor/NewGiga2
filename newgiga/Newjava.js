@@ -180,10 +180,11 @@ function changeComentarios(id){
     for (let i = 0; i < videojuegos[id].comentarios.length+1; i++) {
         let comentarioAInsertar = document.getElementById('newComentario'+ i);
         if (comentarioAInsertar !== null){
-           
             let comentarioReal = comentarioAInsertar.value;
+            console.log (comentarioReal);
+            if ((comentarioReal !== " ")&&(comentarioReal !== "")){
                 videojuegos[id].AddComentario(comentarioReal);
-            
+            }
         }
     }
 }
@@ -196,22 +197,29 @@ function changeVideojuego(id){
     let precioReal= precioAInsertar.value;
     let descripcionAInsertar = document.getElementById('newDescription');
     let descripcionReal = descripcionAInsertar.value;
-    if ((precioReal !== undefined)&&(tituloReal !== undefined)&&(descripcionReal !== undefined)){   
-    let newGame = new videojuego(tituloReal,precioReal,descripcionReal);
-    insertar(newGame,id);
-     }
+    if ((isNaN(precioReal) === false)&&(tituloReal !== "")&&(descripcionReal !== "")&&(precioReal !== "")){   
+        let newGame = new videojuego(tituloReal,precioReal,descripcionReal);
+        insertar(newGame,id);
+        changeComentarios(id);
+        return true;
+    } else {
+        videojuegos[id].comentarios.splice(0,videojuegos[id].comentarios.length)
+        changeComentarios(id);
+        alert("Nombre o Precio no aceptados");
+        return false;
+    }
 
-    changeComentarios(id);
-
-   
+  
 
 }
 
 
 function setChanges(id){
-    changeVideojuego(id);
-
-    reset();
+    let variable = changeVideojuego(id);
+    if (variable==true){
+        reset();
+    }
+    
 }
 
 function showHideNuevo(parteDeInformacion) {
@@ -228,7 +236,6 @@ function showHideNuevo(parteDeInformacion) {
 function borrado(id,idComentario){
     
     changeVideojuego(id);
-
     videojuegos[id].comentarios.splice(idComentario,1);
    
     reset();
@@ -465,7 +472,10 @@ function addJuegoToDOM(game, i) {
     bodytext.appendChild(hTitulo);
     hTitulo.textContent = game.nombre;
     hTitulo.className = "fw-bolder"; 
-    hTitulo.onclick = () => showHideMasInfo(i); 
+    hTitulo.onclick = () => {
+        showHideMasInfo(i); 
+        showHideNuevo('show_formulario');
+    }  
     
     let hPrice = document.createElement("h5");
     bodytext.appendChild(hPrice);
