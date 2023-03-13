@@ -337,10 +337,7 @@ function crearformulario(id){
 
     let divDescription = document.createElement("div");
     inicio.appendChild(divDescription);
-
-    let pDescription = document.createElement("p");
-    divDescription.appendChild(pDescription);
-    pDescription.textContent="Descripción: ";
+    divDescription.content="Descripción: ";
 
     let changedDescription = document.createElement("input");
     divDescription.appendChild(changedDescription);
