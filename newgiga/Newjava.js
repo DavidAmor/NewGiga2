@@ -262,7 +262,7 @@ function formularioComentarios(coment,id,i){
     let inicio = document.getElementById('div-inicial');
     let divComentario = document.createElement("div");
     inicio.appendChild(divComentario);
-    divComentario.content="Comentario "+i+": ";
+    divComentario.textContent="Comentario "+i+": ";
 
     let changedComentario = document.createElement("input");
     divComentario.appendChild(changedComentario);
@@ -337,7 +337,7 @@ function crearformulario(id){
 
     let divDescription = document.createElement("div");
     inicio.appendChild(divDescription);
-    divDescription.content="Descripción: ";
+    divDescription.textContent="Descripción: ";
 
     let changedDescription = document.createElement("input");
     divDescription.appendChild(changedDescription);
