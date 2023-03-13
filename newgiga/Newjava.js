@@ -1,13 +1,19 @@
 class comentario {
     texto = new String;
+    //valor = new String;
 
-    constructor(texto){
+    constructor( texto){
         this.texto=texto;
+        //this.valor=valor;
     }
 
-    toString(){
+    getTexto(){
         return this.texto;
     }
+
+   // getValor(){
+   //     return this.valor;
+   // }
 }
 
 
@@ -74,12 +80,18 @@ videojuego4.imgJuego.src = "img//MW2.jpg";
 
 let videojuegos = [videojuego1, videojuego2,videojuego3,videojuego4];
 
-
+let videojuegoIncompleto = false;
 
 function reset(){
 let borrar = document.getElementById('content');
 borrar.innerHTML = '';
 AddContentToDOM();
+}
+
+function hideFormulario(){
+    let masInfoElement = document.getElementById('show_formulario');
+    masInfoElement.style.display = "none";
+    console.log(masInfoElement.style.display);
 }
 
 function showHide(parteDeInformacion,idVideojuegos) {
@@ -105,18 +117,21 @@ function showHideMasInfo (idVideojuego){
     
     
 }
+
 function atras(i){
 
     reset();
 
-    showHideMasInfo(i);
+    if (i<videojuegos.length){  
+        showHideMasInfo(i);
+        hideFormulario();
+    }
 } 
 
 function erase(numJuego){
     videojuegos.splice(numJuego,1);
     console.log(videojuegos); //array sin elementa a borrar
  
-    reset();
 }
 
 //funcionalidad a añadir que da errores
@@ -131,7 +146,10 @@ let seguro = document.createElement("button");
 asegurador.appendChild(seguro);
 seguro.textContent = "Sí";
 seguro.className = "btn btn-outline-warning";
-seguro.onclick =  () => erase(num);
+seguro.onclick =  () => {
+    erase(num);
+    reset();
+}
 
 let inseguro = document.createElement("button");
 asegurador.appendChild(inseguro);
@@ -162,10 +180,11 @@ function changeComentarios(id){
     for (let i = 0; i < videojuegos[id].comentarios.length+1; i++) {
         let comentarioAInsertar = document.getElementById('newComentario'+ i);
         if (comentarioAInsertar !== null){
-           
             let comentarioReal = comentarioAInsertar.value;
+            console.log (comentarioReal);
+            if ((comentarioReal !== " ")&&(comentarioReal !== "")){
                 videojuegos[id].AddComentario(comentarioReal);
-            
+            }
         }
     }
 }
@@ -178,22 +197,29 @@ function changeVideojuego(id){
     let precioReal= precioAInsertar.value;
     let descripcionAInsertar = document.getElementById('newDescription');
     let descripcionReal = descripcionAInsertar.value;
-    if ((precioReal !== undefined)&&(tituloReal !== undefined)&&(descripcionReal !== undefined)){   
-    let newGame = new videojuego(tituloReal,precioReal,descripcionReal);
-    insertar(newGame,id);
-     }
+    if ((isNaN(precioReal) === false)&&(tituloReal !== "")&&(descripcionReal !== "")&&(precioReal !== "")){   
+        let newGame = new videojuego(tituloReal,precioReal,descripcionReal);
+        insertar(newGame,id);
+        changeComentarios(id);
+        return true;
+    } else {
+        videojuegos[id].comentarios.splice(0,videojuegos[id].comentarios.length)
+        changeComentarios(id);
+        alert("Nombre o Precio no aceptados");
+        return false;
+    }
 
-    changeComentarios(id);
-
-   
+  
 
 }
 
 
 function setChanges(id){
-    changeVideojuego(id);
-
-    reset();
+    let variable = changeVideojuego(id);
+    if (variable==true){
+        reset();
+    }
+    
 }
 
 function showHideNuevo(parteDeInformacion) {
@@ -210,13 +236,25 @@ function showHideNuevo(parteDeInformacion) {
 function borrado(id,idComentario){
     
     changeVideojuego(id);
-
     videojuegos[id].comentarios.splice(idComentario,1);
    
     reset();
     showHideMasInfo(id);
     modify(id);
 
+}
+
+function borrarCom(i){
+    console.log('Todo en orden');
+    create();
+    videojuegos[videojuegos.length-1].comentarios.splice(i,1);
+
+    reset();
+    for (let i = 0; i < videojuegos.length; i++) {
+        showHide('titulo-',i);
+    }
+    hideFormulario();
+    crearformulario(videojuegos.length+1);
 }
 
 function formularioComentarios(coment,id,i){
@@ -228,31 +266,31 @@ function formularioComentarios(coment,id,i){
 
     let changedComentario = document.createElement("input");
     divComentario.appendChild(changedComentario);
-    changedComentario.value = coment;
+    changedComentario.value = coment.getTexto();
     changedComentario.id = 'newComentario'+ i;
     console.log(changedComentario.id);
 
     let borrador = document.createElement("button");
     divComentario.appendChild(borrador);
     borrador.textContent = "Borrar";
-    borrador.onclick = () => borrado(id,i);
-    
-    
-
-
+    if(videojuegos[id]!== undefined){
+       borrador.onclick = () => borrado(id,i); 
+    }else{
+        borrador.onclick = () => borrarCom()}
+  
 }
 
-function AddComentarios(id){
-    videojuegos[id].AddComentario('');
-    formularioComentarios(videojuegos[id].comentarios[videojuegos[id].comentarios.length ], id,videojuegos[id].comentarios.length-1 );
+function AddComentarios(miJuego,id){
+    miJuego.AddComentario(' ');
+    formularioComentarios(miJuego.comentarios[miJuego.comentarios.length-1 ], id,miJuego.comentarios.length-1 );
 
 }
 
 function crearformulario(id){
     let inicio = document.getElementById('div-inicial');
-    let miJuego = new videojuego('','','');
+    let miJuego = new videojuego(' ',' ',' ');
 
-    if (id>-1){
+    if (id<videojuegos.length){
         
       miJuego = videojuegos[id];
 }
@@ -260,7 +298,7 @@ function crearformulario(id){
 
     let divTitulo = document.createElement("p");
     inicio.appendChild(divTitulo);
-    divTitulo.content="Titulo: ";
+    divTitulo.textContent="Titulo: ";
 
     let changedTitulo = document.createElement("input");
     divTitulo.appendChild(changedTitulo);
@@ -297,9 +335,12 @@ function crearformulario(id){
     /////////////
 
 
-    let divDescription = document.createElement("p");
+    let divDescription = document.createElement("div");
     inicio.appendChild(divDescription);
-    divDescription.content="Descripción: ";
+
+    let pDescription = document.createElement("p");
+    divDescription.appendChild(pDescription);
+    pDescription.textContent="Descripción: ";
 
     let changedDescription = document.createElement("input");
     divDescription.appendChild(changedDescription);
@@ -308,16 +349,16 @@ function crearformulario(id){
 
     let divPrecio = document.createElement("p");
     inicio.appendChild(divPrecio);
-    divPrecio.content="Precio: ";
+    divPrecio.textContent="Precio: ";
 
     let changedPrecio = document.createElement("input");
     divPrecio.appendChild(changedPrecio);
-    changedPrecio.value = videojuegos[id].precio;
+    changedPrecio.value = miJuego.getprecio();
     changedPrecio.id = 'newPrecio';
 
     //lo saco a otra función
-    for (let i = 0; i < videojuegos[id].comentarios.length; i++) {
-        let comentario = videojuegos[id].comentarios[i];
+    for (let i = 0; i < miJuego.comentarios.length; i++) {
+        let comentario = miJuego.comentarios[i];
         formularioComentarios(comentario, id, i);
         console.log(i);
     }
@@ -325,23 +366,43 @@ function crearformulario(id){
     let AddComentario = document.createElement("button");
     inicio.appendChild(AddComentario);
     AddComentario.textContent = "Añadir comentario";
-    AddComentario.onclick = () => AddComentarios(id); 
+    AddComentario.onclick = () => AddComentarios(miJuego,id); 
     
     let modificado = document.createElement("button");
     inicio.appendChild(modificado);
     modificado.textContent = "Guardar";
-    modificado.onclick = () => setChanges(id);
+    if (id<videojuegos.length){
+        modificado.onclick = () => setChanges(id);
+    }else{
+        modificado.onclick = () => {
+            let variable =create();
+            console.log(variable);
+            if (variable==true){
+                reset();
+                
+            }else{
+                erase(id);
+                alert("Nombre o Precio no aceptados");
+            }
+        }
+    }
 
     let cancelar = document.createElement("button");
     inicio.appendChild(cancelar);
-    cancelar.textContent = "Cancelar";
-    cancelar.onclick = () => atras(id);
+    cancelar.textContent = "Cancelar";  
+    cancelar.onclick = () => {
+        if(id==videojuegos.length+1){
+            erase(videojuegos.length-1);
+        }
+        atras(id);
+    }
 
 }
 
 function modify(id){
     showHide('titulo-',id);
     showHide('masinfo-',id);
+    hideFormulario();
     crearformulario(id);    
 }
 
@@ -411,7 +472,10 @@ function addJuegoToDOM(game, i) {
     bodytext.appendChild(hTitulo);
     hTitulo.textContent = game.nombre;
     hTitulo.className = "fw-bolder"; 
-    hTitulo.onclick = () => showHideMasInfo(i); 
+    hTitulo.onclick = () => {
+        showHideMasInfo(i); 
+        showHideNuevo('show_formulario');
+    }  
     
     let hPrice = document.createElement("h5");
     bodytext.appendChild(hPrice);
@@ -439,13 +503,15 @@ function addJuegoToDOM(game, i) {
     game.comentarios.forEach(cometario =>{ 
       let pComentarios = document.createElement("p"); 
       divComentarios.appendChild(pComentarios); 
-      pComentarios.textContent = cometario;  
+      pComentarios.textContent = cometario.getTexto();  
     });
 
     let volver = document.createElement("button");
     masinfodiv.appendChild(volver);
     volver.textContent = "Volver a titulos";
-    volver.onclick = () => showHideMasInfo(i);
+    volver.onclick = () => {
+        reset();
+    }
     
     let borrar = document.createElement("button");
     masinfodiv.appendChild(borrar);
@@ -461,34 +527,45 @@ function addJuegoToDOM(game, i) {
 function showFormulario(){
     showHide('show_','formulario');
     showHide('formulario_añadir_','juego');
+    hideFormulario();
 }
 
 function create(){
-    let tituloAInsertar = document.getElementById('createTitulo');
+    let tituloAInsertar = document.getElementById('newTitulo');
     let tituloReal=tituloAInsertar.value;
-    let precioAInsertar = document.getElementById('createPrecio');
+    let precioAInsertar = document.getElementById('newPrecio');
     let precioReal= precioAInsertar.value;
-    let descripcionAInsertar = document.getElementById('createDescription');
+    let descripcionAInsertar = document.getElementById('newDescription');
     let descripcionReal = descripcionAInsertar.value;
-    let comentarioAInsertar = document.getElementById('createComentario');
-    if ((precioReal !== "")&&(tituloReal !== "")&&(isNaN(precioReal) === false)){  // 
+    
     let newGame = new videojuego(tituloReal,precioReal,descripcionReal);
-    newGame.AddComentario(comentarioAInsertar.value);
+    i=0;
+    while(document.getElementById('newComentario'+ i)!=null){
+        let comentarioAInsertar = document.getElementById('newComentario'+ i).value;
+        newGame.AddComentario(comentarioAInsertar);
+        i=i+1;
+    } 
     let ImgNew = document.getElementById("img_input"); 
     newGame.imgJuego.src = ImgNew.value;
     videojuegos.push(newGame);
+     if ((precioReal !== " ")&&(tituloReal !== " ")&&(isNaN(precioReal) === false)){  //
+        return true;
    // videojuegos[videojuegos.length].toString;
-    reset();} else {
-        alert("Nombre o Precio no aceptados");
+    } else {     
+        
+        return false;
     }
 }
 
+                 
+
+
 function crearVideojuego(){
-    let nuevoVideojuego = new videojuego(' ',' ',' ');
-    videojuegos.push(nuevoVideojuego);
-    addJuegoToDOM(nuevoVideojuego,videojuegos.length-1);
-    showHideMasInfo(videojuegos.length-1);
-    modify(videojuegos.length-1);
+    for (let i = 0; i < videojuegos.length; i++) {
+        showHide('titulo-',i);
+    }
+    hideFormulario();
+    crearformulario(videojuegos.length);
 }
 
 function AddContentToDOM(){
@@ -517,10 +594,6 @@ function AddContentToDOM(){
     createB.onclick = () => crearVideojuego();
     createB.id= 'show_formulario';
 
-    let crearFormulario = document.createElement("div");
-    createDiv.appendChild(crearFormulario);
-    crearFormulario.style.display = 'none';
-    crearFormulario.id = 'formulario_añadir_juego';
 
     
 } 
