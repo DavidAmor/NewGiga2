@@ -294,7 +294,7 @@ function formularioComentarios(coment,id,i){
 }
 
 function AddComentarios(miJuego,id){
-    miJuego.AddComentario(' ');
+    miJuego.AddComentario(' ', ' ');
     formularioComentarios(miJuego.comentarios[miJuego.comentarios.length-1 ], id,miJuego.comentarios.length-1 );
 
 }
