@@ -78,7 +78,7 @@ videojuego4.AddComentario("Género : FPS/Acción");
 videojuego4.AddComentario("Tiro al plato y mucha pirotecnia,acción sin pausa y tiros a mansalva.Aunque con una jugabilidad algo rígida y gráficos desfasados, pero dentro de todo disfrutable. ")
 videojuego4.imgJuego.src = "img//MW2.jpg";
 
-let videojuegos = [videojuego1, videojuego2,videojuego3,videojuego4];
+let videojuegos = new Map ([1,videojuego1], [2,videojuego2],[3,videojuego3],[4,videojuego4]);
 
 let videojuegoIncompleto = false;
 
