@@ -1,8 +1,19 @@
-async function loadAJAX(){
-    const response = await fetch('./pagePart.js');
-    const pagePart = await response.text();
-    const content = document.getElementById("content");
-    content.innerHTML = pagePart;
-}
+const NUM_RESULTS = 5;
 
-loadAJAX();    
+let loadMoreRequests = 0;
+
+async function loadMore(){
+
+    const from = (loadMoreRequests) * NUM_RESULTS;
+    const to = from + NUM_RESULTS;
+
+    const response = await fetch(`/videojuegos?from=${from}&to=${to}`);
+
+    const newVideojuegos = await response.text();
+  
+    const videojuegosDiv = document.getElementById("content");
+
+    videojuegosDiv.innerHTML += newVideojuegos;
+
+    loadMoreRequests++;
+}

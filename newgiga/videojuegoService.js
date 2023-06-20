@@ -83,24 +83,40 @@ videojuego4.AddComentario("Género :", " FPS/Acción");
 videojuego4.AddComentario("Comentario:","Tiro al plato y mucha pirotecnia,acción sin pausa y tiros a mansalva.Aunque con una jugabilidad algo rígida y gráficos desfasados, pero dentro de todo disfrutable. ")
 videojuego4.imgJuego.src = "img//MW2.jpg";
 
-let videojuegos = new Map([0,videojuego1],[1,videojuego2],[2,videojuego3],[3,videojuego4]);
-let id = 4;
+let videojuegos = new Map();
 
-export function addVideojuegos(videojuego) {
-    videojuegos.set(id, videojuego);
-    videojuegos.id = id;
+
+let id = 0;
+
+export function addVideogame(videogame) {
+    videojuegos.set(id, videogame);
+    videogame.id = id;
     id++;
 }
 
-export function getVideojuego(id) {
+export function getVideogame(id) {
     return videojuegos.get(id);
 }
-  
-export function getVideojuegos(from) {
+
+export function getComentarios(id){
+    let values = [...videojuegos(id).comentarios.values()];
+    return values;
+}
+
+export function getVideogames(from, to) {
     let values = [...videojuegos.values()];
     if (from !== undefined) {
-        return values.slice(from, from + 4);
+        return values.slice(from, to);
     } else {
         return values;
     }
 }
+
+export function loadSampleData() {
+    addVideogame(videojuego1);
+    addVideogame(videojuego2);
+    addVideogame(videojuego3);
+    addVideogame(videojuego4);
+}
+
+loadSampleData();

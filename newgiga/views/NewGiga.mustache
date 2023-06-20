@@ -11,6 +11,8 @@
         <link href="NewGiga.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="NewImg.css">
 
+        <!--SCRIPT-GIGA-->
+        <script src="Newjava.js"></script>
     </head>
 
     <body>
@@ -66,7 +68,34 @@
                     <!--NO TOCAR EL SIGUIENTE <DIV> PORFAVOR-->
                     <!--Lo USAREMOS COMO EJEMPLO-->  
 
-               
+                    {{#videojuegos}}
+                    
+                        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                             <div class="col mb-5">
+                                <div class="card h-100">
+            
+                                <!-- Product details-->
+                                    <div class="card-body p-4">
+                                        <div class="text-center">
+                                         <!-- Product name-->
+                                            <h5 class="fw-bolder">{{nombre}}</h5>
+                                        <!-- Product price-->
+                                             <h5>{{precio}}€</h5>
+                                        </div>
+                                    </div>
+                                <!-- Product actions-->
+                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                        <div class="text-center">
+                                             <p class="btn btn-outline-dark mt-auto">{{descripcion}}</p>
+                                             {{#comentarios}}
+                                            {{/comentarios}}
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {{/videojuegos}}
 
                 <!--HASTA AQUIE ES PARA LA IMPLEMETACION DE JAVASCRIPT-->
 
@@ -81,7 +110,6 @@
        
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!--SCRIPT-GIGA-->
-        <script src="Newjava.js"></script>
+        
     </body>
 </html>
